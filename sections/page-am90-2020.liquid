@@ -1,0 +1,251 @@
+<div id="am90" data-section-id="{{ section.id }}" data-section-type="page-am90-2020">
+  {% for block in section.blocks %}
+    
+    {% capture block_html %}
+      {% if block.type == "hero_image" %}
+        <img src="{{ block.settings.image | img_url: '100x' }}" style="width: 100%;" />
+      {% elsif block.type == "product_feature" %}
+        <div class="am90-product-feature">
+          <div class="am90-product-feature__top">
+            <div class="am90-product-feature__top-content">
+              <h2>{{ block.settings.title }}</h2>
+              <div class="am90-content">
+                {{ block.settings.content }}
+              </div>
+            </div>
+            <div class="am90-product-feature__top-image">
+              <img src="{{ block.settings.image | img_url: '20x' }}" style="width: 100%" />
+            </div>            
+          </div>
+        </div>
+        {% capture bottom_images_html %}
+          {% for i in (1..3) %}
+            {% assign setting_handle = 'additional_image_' | append: i %}
+            {% assign image_setting = block.settings[setting_handle] %}
+            <div class="am90-product-feature__bottom-image">
+              <div>
+                <img src="{{ image_setting | img_url: '20x' }}" style="width: 100%" />
+              </div>
+            </div>
+          {% endfor %}
+        {% endcapture %}
+
+        {% if bottom_images_html != blank %}
+          <div class="am90-product-feature__bottom">
+            {{ bottom_images_html }}
+          </div>
+        {% endif %}
+      {% elsif block.type == "product_grid" %}
+        <h2>{{ block.settings.title }}</h2>
+
+        {% capture product_grid_content %}
+          {% for i in (1..6) %}
+            {% assign setting_handle = 'product_' | append: i %}
+            {% assign product_handle = block.settings[setting_handle] %}
+            {% assign product = all_products[product_handle] %}
+            {% if product_handle != blank %}
+              <div class="am90-product-grid__item">
+                <div style="margin-bottom: 30px;">
+                  <img src="{{ product.featured_image | img_url: '20x' }}" style="width: 100%;" />
+                </div>
+                <h3 style="text-decoration: underline; font-family: NHD-65; font-weight: bold; letter-spacing: 0.05em;">
+                  {{ product.title }}
+                </h3>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endcapture %}
+        
+        {% assign product_grid_content = product_grid_content | strip %}
+
+        {% if product_grid_content != blank %}
+          <div class="am90-product-grid" style="display: flex">
+            {{ product_grid_content }}
+          </div>
+        {% endif %}
+      {% elsif block.type == "interview" %}
+        {% capture interview_mosaic_images %}
+          {% for i in (1..3) %}
+            {% assign setting_handle = 'image_' | append: i %}
+            {% assign image_setting = block.settings[setting_handle] %}
+            {% if image_setting != blank %}
+              <div class="interview-mosaic__img interview-mosaic__img--{{ i }}">
+                <img src="{{ image_setting | img_url: '20x' }}" />
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endcapture %}
+
+        {% if interview_mosaic_images != blank %}
+          <div class="interview-mosaic">
+            {{ interview_mosaic_images }}
+          </div>
+        {% endif %}
+
+        <h2>{{ block.settings.title }}</h2>
+        <div class="am90-content">
+          {{ block.settings.content }}
+        </div>
+      {% elsif block.type == "accent_image" %}
+        <img src="{{ block.settings.image | img_url: '20x' }}" style="display: block; width: 100%; margin: 0 auto; max-width: 1200px;" />
+      {% endif %}
+    {% endcapture %}
+
+    {% assign block_html = block_html | strip %}
+
+    {% if block_html != blank %}
+      <div class="am90-block am90-block--{{ block.type | replace: '_', '-' }}" {{ block.shopify_attributes }}>
+        {{ block_html }}
+      </div>
+    {% endif %}
+
+  {% endfor %}
+</div>
+
+{% schema %}
+  {
+    "name": "Undefeated x Nike AM90",
+    "settings": [
+    ],
+    "blocks": [
+      {
+        "type": "hero_image",
+        "name": "Hero Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }
+        ]
+      },
+      {
+        "type": "product_feature",
+        "name": "Product Feature",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content"
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Featured Image"
+          },
+          {
+            "type": "header",
+            "content": "Additional Images"
+          },
+          {
+            "type": "image_picker",
+            "id": "additional_image_1",
+            "label": "Image #1"
+          },
+          {
+            "type": "image_picker",
+            "id": "additional_image_2",
+            "label": "Image #2"
+          },
+          {
+            "type": "image_picker",
+            "id": "additional_image_3",
+            "label": "Image #3"
+          }
+        ]
+      },
+      {
+        "type": "product_grid",
+        "name": "Product Grid",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "product",
+            "id": "product_1",
+            "label": "Product #1"
+          },
+          {
+            "type": "product",
+            "id": "product_2",
+            "label": "Product #2"
+          },
+          {
+            "type": "product",
+            "id": "product_3",
+            "label": "Product #3"
+          },
+          {
+            "type": "product",
+            "id": "product_4",
+            "label": "Product #4"
+          },
+          {
+            "type": "product",
+            "id": "product_5",
+            "label": "Product #5"
+          },
+          {
+            "type": "product",
+            "id": "product_6",
+            "label": "Product #6"
+          }
+        ]
+      },
+      {
+        "type": "interview",
+        "name": "Interview",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "content",
+            "label": "Content"
+          },
+          {
+            "type": "header",
+            "content": "Design"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_1",
+            "label": "Image #1"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_2",
+            "label": "Image #2"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_3",
+            "label": "Image #3"
+          }
+        ]
+      },
+      {
+        "type": "accent_image",
+        "name": "Accent Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
